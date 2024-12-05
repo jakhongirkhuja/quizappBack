@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Project;
 use App\Models\User;
+use Illuminate\Support\Str;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -27,19 +29,20 @@ class AuthController extends Controller
             'token' => $token,
         ]);
     }
-    public function register(RegisterRequest $request, ProjectService $projectService)
+    public function register(RegisterRequest $request)
     {
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
         ]);
-
+       
         $token = $user->createToken('auth_token')->plainTextToken;
         
         $data['name']= 'Новый проект';
         $data['user_id']= $user->id;
-        $projectService->createProject($data);
+        $data['uuid'] = Str::uuid();
+        Project::create($data);
         
         return response()->json([
             'message' => 'User registered successfully',

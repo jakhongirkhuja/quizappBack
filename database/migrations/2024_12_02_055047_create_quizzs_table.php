@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('quizzs', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
+            $table->text('title')->nullable();
             $table->unsignedBigInteger('user_id')->index();
+
             $table->unsignedBigInteger('project_id')->index();
             $table->boolean('domainType')->default(false); //false= Стандартная, true= На поддомене
             $table->boolean('publish')->default(false);

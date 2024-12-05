@@ -2,16 +2,24 @@
 
 namespace App\Services;
 
+use App\Models\Project;
 use App\Models\Quizz;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 
 class QuizzService
 {
     public function getAllQuizzes()
     {
-        return Quizz::all();
+        if(request()->project_id){
+            $project = Project::with('quizzs.leads.visitLog')->where('uuid', request()->project_id)->where('user_id',Auth::id())->first();
+            if($project){
+                return $project->quizzs()->latest()->get();
+            }
+        }
+        return [];
     }
 
     public function getQuizzById($id)

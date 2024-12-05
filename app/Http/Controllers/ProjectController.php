@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ProjectService;
 use App\Http\Requests\ProjectRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -15,6 +16,7 @@ class ProjectController extends Controller
     }
     public function index(): JsonResponse
     {
+       
         $projects = $this->projectService->getAllProjects();
         
         return response()->json($projects);

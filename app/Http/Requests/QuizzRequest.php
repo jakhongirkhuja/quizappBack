@@ -23,6 +23,7 @@ class QuizzRequest extends FormRequest
     {
         return [
             'user_id' => 'required|exists:users,id',
+            'title'=>'required|max:255',
             'project_id' => 'required|exists:projects,id',
             'domainType' => 'required|boolean',
             'publish' => 'required|boolean',

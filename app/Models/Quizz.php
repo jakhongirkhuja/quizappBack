@@ -20,4 +20,13 @@ class Quizz extends Model
         'next_question_text',
         'next_to_form',
     ];
+    
+    public function leads()
+    {
+        return $this->hasMany(Lead::class);
+    }
+    public function visitLog()
+    {
+        return $this->hasMany(VisitLog::class);
+    }
 }

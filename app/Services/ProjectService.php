@@ -21,7 +21,7 @@ class ProjectService
     public function createProject(array $data)
     {
         $data['uuid'] = Str::uuid();
-        $data['user_id'] = Auth::id();
+        $data['user_id'] =  Auth::id();
         return Project::create($data);
     }
 

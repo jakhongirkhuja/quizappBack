@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('quizz_id')->index();
             $table->text('hero_image')->nullable();
             $table->text('hero_image_mobi')->nullable();
-            $table->text('hero_image')->nullable();
             $table->text('logo')->nullable();
             $table->text('slogan_text')->nullable();
             $table->text('title')->nullable();

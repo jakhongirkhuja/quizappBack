@@ -16,21 +16,26 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']); 
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::group(['prefix' => 'projects'], function () {
-    Route::get('/', [ProjectController::class, 'index']); 
-    Route::get('/{id}', [ProjectController::class, 'show']); 
-    Route::post('/', [ProjectController::class, 'store']); 
-    Route::post('/{id}', [ProjectController::class, 'update']);
-    Route::delete('/{id}', [ProjectController::class, 'destroy']);
-})->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::group(['prefix' => 'projects'], function () {
+        Route::get('/', [ProjectController::class, 'index']);
+        Route::get('/{id}', [ProjectController::class, 'show']); 
+        Route::post('/', [ProjectController::class, 'store']); 
+        Route::post('/{id}', [ProjectController::class, 'update']);
+        Route::delete('/{id}', [ProjectController::class, 'destroy']);
+        
+    });
+    Route::group(['prefix' => 'quizzes'], function () {
+        Route::get('/', [QuizzController::class, 'index']); 
+        Route::get('/{id}', [QuizzController::class, 'show']); 
+        Route::post('/', [QuizzController::class, 'store']); 
+        Route::put('/{id}', [QuizzController::class, 'update']); // Update a quiz
+        Route::delete('/{id}', [QuizzController::class, 'destroy']); // Delete a quiz
+    });
 
-Route::group(['prefix' => 'quizzes'], function () {
-    Route::get('/', [QuizzController::class, 'index']); 
-    Route::get('/{id}', [QuizzController::class, 'show']); 
-    Route::post('/', [QuizzController::class, 'store']); 
-    Route::put('/{id}', [QuizzController::class, 'update']); // Update a quiz
-    Route::delete('/{id}', [QuizzController::class, 'destroy']); // Delete a quiz
 });
+
+
 
 
 Route::group(['prefix' => 'questions'], function () {
