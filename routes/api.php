@@ -29,6 +29,9 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('{uuid}/quizz/startPageText', [CustomController::class, 'createQuizStartPageText']);
                 Route::post('{uuid}/quizz/formPageImages', [CustomController::class, 'createQuizFormPageImages']);
                 Route::post('{uuid}/quizz/formPageText', [CustomController::class, 'createQuizFormPageText']);
+
+                Route::post('{uuid}/quizz/postQuestions', [CustomController::class, 'createPostQuestions']);
+                Route::post('{uuid}/quizz/postAnswers', [CustomController::class, 'createPostAnswers']);
             });
         });
         

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomCreatePostAnswerRequest;
+use App\Http\Requests\CustomCreatePostQuestionRequest;
 use App\Http\Requests\CustomQuizFormPageImageRequest;
 use App\Http\Requests\CustomQuizFormPageTextRequest;
 use App\Http\Requests\CustomQuizStartPageImageRequest;
@@ -74,5 +76,27 @@ class CustomController extends Controller
         }
         return response()->json([],404);
         
+    }
+    public function createPostQuestions(CustomCreatePostQuestionRequest $request,  $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        if($project && request()->front_id){
+            $quizz = Quizz::where('front_id',request()->front_id)->first();
+            if(!$quizz){
+                $quizz = $this->quizzCreate($project->id);
+            }
+            return $this->customQuizzService->createPostQuestions($request->validated(),$quizz);
+        }
+        return response()->json([],404);
+    }
+    public function createPostAnswers(CustomCreatePostAnswerRequest $request,  $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        if($project && request()->front_id){
+            $quizz = Quizz::where('front_id',request()->front_id)->first();
+            if(!$quizz){
+                $quizz = $this->quizzCreate($project->id);
+            }
+            return $this->customQuizzService->createPostAnswers($request->validated(),$quizz);
+        }
+        return response()->json([],404);
     }
 }

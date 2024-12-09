@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Answer;
 use App\Models\FormPage;
 use App\Models\Project;
+use App\Models\Question;
 use App\Models\Quizz;
 use App\Models\StartPage;
 use Illuminate\Support\Str;
@@ -121,6 +123,13 @@ class CustomQuizzService{
         $image->move($destinationPath, $imageName); // Move the image to the specified directory
         return 'start_page/' . $imageName; // Return the relative path to store in the database
     }
+    private function moveImageAnswers(UploadedFile $image)
+    {
+        $destinationPath = public_path('answers'); // Define where to store the images
+        $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension(); // Generate a unique name for the image
+        $image->move($destinationPath, $imageName); // Move the image to the specified directory
+        return 'answers/' . $imageName; // Return the relative path to store in the database
+    }
 
     /**
      * Delete the old image from the storage.
@@ -135,5 +144,57 @@ class CustomQuizzService{
                 unlink($filePath); // Delete the image file
             }
         }
+    }
+    public function createPostQuestions($data, $quizz){
+        $question = Question::where('front_id',$data['front_id'])->first();
+        if(!$question){
+            $question= new Question();
+            $question->front_id  =$data['front_id'];
+            $question->quizz_id = $quizz->id;
+            $question->uuid = Str::orderedUuid();
+        }
+        $question->type = $data['type'];
+        $question->question = $data['question'];
+        $question->expanded = $data['expanded'];
+        $question->hidden = $data['hidden'];
+        $question->expanded_footer = $data['expanded_footer'];
+        $question->required = $data['required'];
+        $question->multiple_answers = $data['multiple_answers'];
+        $question->long_text = $data['long_text'];
+        $question->proportion = $data['proportion'];
+        $question->scroll = $data['scroll'];
+        $question->save();
+        return response()->json($question, 201);
+    }
+    public function createPostAnswers($data, $quizz){
+        $question = Question::where('front_id',$data['question_id'])->first();
+        if($question){
+            $answers = Answer::where('question_id', $question->id)->where('front_id',$data['front_id'])->first();
+            if(!$answers){
+                $answers = new Answer();
+            }
+            $answers->question_id = $question->id;
+            $answers->custom_answer = $data['custom_answer'];
+            $answers->front_id = $data['front_id'];
+            $answers->order = $data['order'];
+            $answers->selected = $data['selected'];
+            $answers->text = $data['text'];
+            $answers->secondary_text = $data['secondary_text'];
+            
+            $answers->rank = $data['rank'];
+            $answers->rank_text_min = $data['rank_text_min'];
+            $answers->rank_text_max = $data['rank_text_max'];
+            $answers->time_select = $data['time_select'];
+            if(isset($data['image'])){
+                $this->deleteOldImage($question->image);
+                $answers->image = $this->moveImageAnswers($data['image']);
+            }
+            $answers->save();
+            return response()->json($answers, 201);
+        }
+        return response()->json([], 201);
+        
+        
+        
     }
 }
