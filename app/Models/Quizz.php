@@ -25,6 +25,14 @@ class Quizz extends Model
     {
         return $this->hasMany(Lead::class);
     }
+    public function startPage()
+    {
+        return $this->hasOne(StartPage::class);
+    }
+    public function formPage()
+    {
+        return $this->hasOne(FormPage::class);
+    }
     public function visitLog()
     {
         return $this->hasMany(VisitLog::class);

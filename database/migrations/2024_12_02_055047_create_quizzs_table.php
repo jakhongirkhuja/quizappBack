@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('quizzs', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->index();
+            $table->text('front_id');
             $table->text('title')->nullable();
             $table->unsignedBigInteger('user_id')->index();
 

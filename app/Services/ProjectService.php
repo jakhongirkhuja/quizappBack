@@ -10,7 +10,7 @@ class ProjectService
 {
     public function getAllProjects()
     {
-        return Project::with('quizzs')->where('user_id', Auth::id())->get();
+        return Project::with('quizzs.startPage','quizzs.formPage')->where('user_id', Auth::id())->get();
     }
 
     public function getProjectById($id)

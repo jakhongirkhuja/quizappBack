@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
@@ -17,12 +18,29 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::group(['prefix' => 'v1'], function () {
+        
+        Route::group(['prefix' => 'custom'], function () {
+
+            Route::group(['prefix' => 'project'], function () {
+
+                Route::post('{uuid}/quizz/startPageImages', [CustomController::class, 'createQuizStartPageImages']);
+                Route::post('{uuid}/quizz/startPageText', [CustomController::class, 'createQuizStartPageText']);
+                Route::post('{uuid}/quizz/formPageImages', [CustomController::class, 'createQuizFormPageImages']);
+                Route::post('{uuid}/quizz/formPageText', [CustomController::class, 'createQuizFormPageText']);
+            });
+        });
+        
+         
+    });
     Route::group(['prefix' => 'projects'], function () {
         Route::get('/', [ProjectController::class, 'index']);
         Route::get('/{id}', [ProjectController::class, 'show']); 
         Route::post('/', [ProjectController::class, 'store']); 
         Route::post('/{id}', [ProjectController::class, 'update']);
         Route::delete('/{id}', [ProjectController::class, 'destroy']);
+        
         
     });
     Route::group(['prefix' => 'quizzes'], function () {
