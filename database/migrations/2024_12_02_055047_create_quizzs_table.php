@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('front_id');
             $table->text('title')->nullable();
             $table->unsignedBigInteger('user_id')->index();
-
+            $table->text('url')->unique();
             $table->unsignedBigInteger('project_id')->index();
             $table->boolean('domainType')->default(false); //false= Стандартная, true= На поддомене
             $table->boolean('publish')->default(false);

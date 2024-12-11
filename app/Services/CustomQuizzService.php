@@ -14,6 +14,55 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 
 class CustomQuizzService{
+    public function createInstallButtons($data, $quizz){
+        if(isset($data['next_question_text'])){
+            $quizz->next_question_text = $data['next_question_text'];
+        }
+        if(isset($data['next_to_form'])){
+            $quizz->next_to_form = $data['next_to_form'];
+        }
+        $quizz->save();
+        return response()->json($quizz,201);
+    }
+    public function createInstall($data, $quizz){
+        $quizz->domainType = $data['domainType'];
+        $quizz->publish = filter_var($data['publish'], FILTER_VALIDATE_BOOLEAN);
+        $checkUrl = Quizz::where('url', $data['url'])->where('id','!=',$quizz->id)->first();
+        $inside = false;
+        if(!$checkUrl){
+            
+            $forbiddenWords = [
+                'porn', 'porno', 'xxx', 'sex', 'sexual', 'nude', 'nudity', 'erotic',
+                'adult', 'fetish', 'hardcore', 'softcore', 'playboy', 'hustler', 'strip',
+                'escort', 'bdsm', 'kinky', 'taboo', 'lingerie', 'camgirl', 'webcam', 'hot',
+                'dirty', 'explicit', 'lewd', 'obscene', 'masturbation', 'orgasm', 'lust',
+                'arousal', 'voyeur', 'incest', 'bestiality', 'rape', 'prostitute', 
+                'prostitution', 'brothel', 'hookup', 'hooker', 'one-night-stand', 'swinger',
+                'swinging', 'affair', 'cheating', 'underwear', 'panties', 'bra', 'bikini',
+                'butt', 'boobs', 'breasts', 'vagina', 'penis', 'genitals', 'anal', 'oral',
+                'threesome', 'orgy', 'gangbang', 'slut', 'whore', 'milf', 'dilf', 'hentai',
+                'animeporn', 'yaoi', 'yuri', 'furry', 'smut', 'kamasutra', 'stripper',
+                'shemale', 'transsexual', 'crossdressing', 'dominatrix', 'submission', 
+                'dominance', 'sugarbaby', 'sugardaddy', 'lingerie', 'cam', 'peep'
+            ];
+            foreach ($forbiddenWords as $word) {
+                if (stripos($data['url'], $word) !== false) {
+                    $inside = true;
+                }
+            }
+            if(!$inside){
+                $quizz->url = $data['url'];
+            }
+        }
+        $quizz->save();
+        if($inside){
+            return response()->json('',550);
+        }
+        if($checkUrl){
+            return response()->json('', 302);
+        }
+        return response()->json($quizz,201);
+    }
     public function createMetas($data, $quizz){
         if(isset($data['meta_image'])){
             $this->deleteOldImage($quizz->meta_image);
@@ -234,6 +283,52 @@ class CustomQuizzService{
             $question->delete();
         }
         return response([], 204);
+    }
+    public function removeProject($project){
+        $quizes = $project->quizzs;
+        try {
+            foreach ($quizes as $quiz) {
+                $questions = $quiz->questions;
+                foreach ($questions as $question) {
+                    $answers = $question->answers;
+                    if($answers){
+                        foreach ($answers as $key => $answer) {
+                            $this->deleteOldImage($answer->image);
+                            $answer->delete();
+                        }
+                    }
+                    $this->deleteOldImage($question->image);
+                    $question->delete();
+                }
+                $quiz->delete();
+            }
+            $project->delete();
+            return response()->json(null,204);
+        } catch (\Throwable $th) {
+            return response()->json(null, 502);
+        }
+        
+    }
+    public function removeQuizz($quiz){
+        
+        try {
+            $questions = $quiz->questions;
+            foreach ($questions as $question) {
+                $answers = $question->answers;
+                if($answers){
+                    foreach ($answers as $key => $answer) {
+                        $this->deleteOldImage($answer->image);
+                        $answer->delete();
+                    }
+                }
+                $this->deleteOldImage($question->image);
+                $question->delete();
+            }
+            $quiz->delete();
+            return response()->json(null,204);
+        } catch (\Throwable $th) {
+            return response()->json(null, 502);
+        }
     }
     public function duplicateQuestions($data){
         $question = Question::with('answers')->where('front_id',$data['question_id'])->first();

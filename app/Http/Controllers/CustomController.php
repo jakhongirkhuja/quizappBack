@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomCreatePostAnswerRequest;
 use App\Http\Requests\CustomCreatePostQuestionRequest;
+use App\Http\Requests\CustomProjectTitleCreateRequest;
 use App\Http\Requests\CustomQuizFormPageImageRequest;
 use App\Http\Requests\CustomQuizFormPageTextRequest;
+use App\Http\Requests\CustomQuizInstallButtonRequest;
+use App\Http\Requests\CustomQuizInstallRequest;
 use App\Http\Requests\CustomQuizMetasRequest;
 use App\Http\Requests\CustomQuizStartPageImageRequest;
 use App\Http\Requests\CustomQuizStartPageTextRequest;
@@ -14,6 +17,7 @@ use App\Http\Requests\RemoveQuestionRequest;
 use App\Models\Project;
 use App\Models\Quizz;
 use App\Services\CustomQuizzService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -24,7 +28,7 @@ class CustomController extends Controller
         $this->customQuizzService = $customQuizzService;
     }
     public function getQuizz($uuid){
-        $project = Project::where('uuid', $uuid)->first();
+        $project = Project::where('uuid', $uuid)->where('user_id', Auth::id())->first();
         if($project && request()->front_idP){
             if(request()->page=='formPage'){
                 $quizz = Quizz::with('formPage')->where('front_id',request()->front_idP)->first();
@@ -43,9 +47,37 @@ class CustomController extends Controller
         $quiz->front_id  = request()->front_idP;
         $quiz->uuid =Str::orderedUuid();
         $quiz->user_id =Auth::id();
+        $quiz->url = (string)Str::orderedUuid().(string)Carbon::now()->timestamp;
         $quiz->project_id = $project_id;
         $quiz->save();
         return $quiz;
+    }
+    public function removeProject($uuid){
+        $project = Project::with('quizzs.questions.answers')->where('uuid', $uuid)->where('user_id', Auth::id())->first();
+        if($project){
+            return $this->customQuizzService->removeProject($project);
+        }
+        return response()->json([],404);
+    }
+    public function removeQuiz($uuid){
+        $project = Project::where('uuid', $uuid)->where('user_id', Auth::id())->first();
+        if($project && request()->front_idP){
+            $quizz = Quizz::with('questions.answers')->where('front_id',request()->front_idP)->first();
+            if($quizz){
+                $this->customQuizzService->removeQuizz($quizz);
+            }
+        }
+        return response()->json([],404);
+    }
+    public function createProjectTitle(CustomProjectTitleCreateRequest $request, $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        if($project){
+            $data = $request->validated();
+            $project->name = $data['title'];
+            $project->save();
+            return response()->json($project,201);
+        }
+        return response()->json([],404);
     }
     public function createMetas(CustomQuizMetasRequest $request, $uuid){
         $project = Project::where('uuid', $uuid)->first();
@@ -56,6 +88,30 @@ class CustomController extends Controller
             }
             $this->customQuizzService->createMetas($request->validated(),$quizz);
             return response()->json($quizz,201);
+        }
+        return response()->json([],404);
+    }
+    public function createInstall(CustomQuizInstallRequest $request, $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        if($project && request()->front_idP){
+            $quizz = Quizz::where('front_id',request()->front_idP)->first();
+            if(!$quizz){
+                $quizz = $this->quizzCreate($project->id);
+            }
+            return $this->customQuizzService->createInstall($request->validated(),$quizz);
+            
+        }
+        return response()->json([],404);
+    }
+    public function createInstallButtons(CustomQuizInstallButtonRequest $request, $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        if($project && request()->front_idP){
+            $quizz = Quizz::where('front_id',request()->front_idP)->first();
+            if(!$quizz){
+                $quizz = $this->quizzCreate($project->id);
+            }
+            return $this->customQuizzService->createInstallButtons($request->validated(),$quizz);
+            
         }
         return response()->json([],404);
     }

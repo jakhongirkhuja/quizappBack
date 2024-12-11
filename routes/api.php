@@ -27,7 +27,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
                 Route::get('{uuid}/quizz', [CustomController::class, 'getQuizz']);
                 
+
+                
+                Route::post('{uuid}/postTitle', [CustomController::class, 'createProjectTitle']);
+                Route::post('{uuid}/remove', [CustomController::class, 'removeProject']);
+                Route::post('{uuid}/quizz/remove', [CustomController::class, 'removeQuiz']);
+                
                 Route::post('{uuid}/quizz/metas', [CustomController::class, 'createMetas']);
+                Route::post('{uuid}/quizz/install', [CustomController::class, 'createInstall']);
+                Route::post('{uuid}/quizz/installButtons', [CustomController::class, 'createInstallButtons']);
+
+                
                 Route::post('{uuid}/quizz/postTitle', [CustomController::class, 'createPostTitle']);
                 Route::post('{uuid}/quizz/startPageImages', [CustomController::class, 'createQuizStartPageImages']);
                 Route::post('{uuid}/quizz/startPageText', [CustomController::class, 'createQuizStartPageText']);
@@ -45,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::group(['prefix' => 'projects'], function () {
         Route::get('/', [ProjectController::class, 'index']);
-        Route::get('/{id}', [ProjectController::class, 'show']); 
+        Route::get('/{uuid}', [ProjectController::class, 'show']); 
         Route::post('/', [ProjectController::class, 'store']); 
         Route::post('/{id}', [ProjectController::class, 'update']);
         Route::delete('/{id}', [ProjectController::class, 'destroy']);

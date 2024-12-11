@@ -17,6 +17,10 @@ class ProjectService
     {
         return Project::where('user_id', Auth::id())->where('id', $id)->firstOrFail();
     }
+    public function getProjectByUuid($uuid)
+    {
+        return Project::where('user_id', Auth::id())->where('uuid', $uuid)->firstOrFail();
+    }
 
     public function createProject(array $data)
     {

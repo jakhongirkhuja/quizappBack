@@ -24,7 +24,7 @@ class ProjectController extends Controller
 
     public function show($id): JsonResponse
     {
-        $project = $this->projectService->getProjectById($id);
+        $project = $this->projectService->getProjectByUuid($id);
         return response()->json($project);
     }
 
