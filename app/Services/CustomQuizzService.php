@@ -14,6 +14,22 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 
 class CustomQuizzService{
+    public function createMetas($data, $quizz){
+        if(isset($data['meta_image'])){
+            $this->deleteOldImage($quizz->meta_image);
+            $quizz->meta_image = $this->moveImageMetas($data['meta_image']);
+        }
+        if(isset($data['meta_favicon'])){
+            $this->deleteOldImage($quizz->meta_favicon);
+            $quizz->meta_favicon = $this->moveImageMetas($data['meta_favicon']);
+        }
+        $quizz->title = $data['title'];
+        $quizz->meta_title = $data['meta_title'];
+        $quizz->meta_description = $data['meta_description'];
+        $quizz->save();
+        return response()->json($quizz, 201);
+    }
+    
     public function uploadImageStartPage($data, $quizz){
 
         if(isset($data['hero_image'])){
@@ -123,6 +139,13 @@ class CustomQuizzService{
         $image->move($destinationPath, $imageName); // Move the image to the specified directory
         return 'start_page/' . $imageName; // Return the relative path to store in the database
     }
+    private function moveImageMetas(UploadedFile $image)
+    {
+        $destinationPath = public_path('metas'); // Define where to store the images
+        $imageName = Str::uuid() . '.' . $image->getClientOriginalExtension(); // Generate a unique name for the image
+        $image->move($destinationPath, $imageName); // Move the image to the specified directory
+        return 'metas/' . $imageName; // Return the relative path to store in the database
+    }
     private function moveImageAnswers(UploadedFile $image)
     {
         $destinationPath = public_path('answers'); // Define where to store the images
@@ -155,14 +178,15 @@ class CustomQuizzService{
         }
         $question->type = $data['type'];
         $question->question = $data['question'];
-        $question->expanded = $data['expanded'];
-        $question->hidden = $data['hidden'];
-        $question->expanded_footer = $data['expanded_footer'];
-        $question->required = $data['required'];
-        $question->multiple_answers = $data['multiple_answers'];
-        $question->long_text = $data['long_text'];
+        $question->expanded =filter_var($data['expanded'], FILTER_VALIDATE_BOOLEAN);
+        $question->hidden =filter_var($data['hidden'], FILTER_VALIDATE_BOOLEAN);
+        $question->selft_input  = filter_var($data['selft_input'], FILTER_VALIDATE_BOOLEAN);
+        $question->expanded_footer = filter_var($data['expanded_footer'], FILTER_VALIDATE_BOOLEAN);
+        $question->required = filter_var($data['required'], FILTER_VALIDATE_BOOLEAN); 
+        $question->multiple_answers = filter_var($data['multiple_answers'], FILTER_VALIDATE_BOOLEAN);
+        $question->long_text = filter_var($data['long_text'], FILTER_VALIDATE_BOOLEAN);
         $question->proportion = $data['proportion'];
-        $question->scroll = $data['scroll'];
+        $question->scroll = filter_var($data['scroll'], FILTER_VALIDATE_BOOLEAN);
         $question->save();
         return response()->json($question, 201);
     }
@@ -174,10 +198,10 @@ class CustomQuizzService{
                 $answers = new Answer();
             }
             $answers->question_id = $question->id;
-            $answers->custom_answer = $data['custom_answer'];
+            $answers->custom_answer =filter_var($data['custom_answer'], FILTER_VALIDATE_BOOLEAN);
             $answers->front_id = $data['front_id'];
             $answers->order = $data['order'];
-            $answers->selected = $data['selected'];
+            $answers->selected = filter_var($data['selected'], FILTER_VALIDATE_BOOLEAN);
             $answers->text = $data['text'];
             $answers->secondary_text = $data['secondary_text'];
             
@@ -196,5 +220,36 @@ class CustomQuizzService{
         
         
         
+    }
+    public function removeQuestion($data){
+        $question = Question::with('answers')->where('front_id',$data['question_id'])->first();
+        if($question){
+            $answers = $question->answers;
+            if($answers){
+                foreach ($answers as $key => $answer) {
+                    $this->deleteOldImage($answer->image);
+                    $answer->delete();
+                }
+            }
+            $question->delete();
+        }
+        return response([], 204);
+    }
+    public function duplicateQuestions($data){
+        $question = Question::with('answers')->where('front_id',$data['question_id'])->first();
+        if($question){
+            $newQuestion = $question->replicate();
+            $newQuestion->save();
+            $arrayAnswer =[];
+            foreach ($question->answers as $answer) {
+                $newAnswer = $answer->replicate();
+                $newAnswer->question_id = $newQuestion->id; 
+                $newAnswer->save();
+                $arrayAnswer[] = $newAnswer;
+            }
+            $d['question']= $newQuestion;
+            $d['answers']=$arrayAnswer;
+            return response()->json($d, 201);
+        }
     }
 }

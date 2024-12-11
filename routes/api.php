@@ -25,6 +25,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
             Route::group(['prefix' => 'project'], function () {
 
+                Route::get('{uuid}/quizz', [CustomController::class, 'getQuizz']);
+                
+                Route::post('{uuid}/quizz/metas', [CustomController::class, 'createMetas']);
+                Route::post('{uuid}/quizz/postTitle', [CustomController::class, 'createPostTitle']);
                 Route::post('{uuid}/quizz/startPageImages', [CustomController::class, 'createQuizStartPageImages']);
                 Route::post('{uuid}/quizz/startPageText', [CustomController::class, 'createQuizStartPageText']);
                 Route::post('{uuid}/quizz/formPageImages', [CustomController::class, 'createQuizFormPageImages']);
@@ -32,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
                 Route::post('{uuid}/quizz/postQuestions', [CustomController::class, 'createPostQuestions']);
                 Route::post('{uuid}/quizz/postAnswers', [CustomController::class, 'createPostAnswers']);
+                Route::post('{uuid}/quizz/removeQuestions', [CustomController::class, 'removeQuestion']);
+                Route::post('{uuid}/quizz/duplicateQuestions', [CustomController::class, 'duplicateQuestions']);
             });
         });
         

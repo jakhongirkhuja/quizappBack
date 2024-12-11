@@ -33,6 +33,11 @@ class Quizz extends Model
     {
         return $this->hasOne(FormPage::class);
     }
+   
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
     public function visitLog()
     {
         return $this->hasMany(VisitLog::class);
