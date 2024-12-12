@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('designs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('quizz_id')->index();
+            $table->integer('design_id')->nullable();
             $table->string('designTitle')->nullable();
             $table->string('buttonColor')->nullable();
             $table->string('buttonTextColor')->nullable();

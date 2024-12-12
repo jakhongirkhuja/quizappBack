@@ -34,6 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('{uuid}/quizz/remove', [CustomController::class, 'removeQuiz']);
                 
                 Route::post('{uuid}/quizz/metas', [CustomController::class, 'createMetas']);
+                Route::post('{uuid}/quizz/design', [CustomController::class, 'createDesign']);
                 Route::post('{uuid}/quizz/install', [CustomController::class, 'createInstall']);
                 Route::post('{uuid}/quizz/installButtons', [CustomController::class, 'createInstallButtons']);
 

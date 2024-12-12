@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Answer;
+use App\Models\Design;
 use App\Models\FormPage;
 use App\Models\Project;
 use App\Models\Question;
@@ -78,7 +79,27 @@ class CustomQuizzService{
         $quizz->save();
         return response()->json($quizz, 201);
     }
-    
+    public function createDesign($data, $quizz){
+
+        $design = $quizz->design;
+        if(!$design){
+            $design = new Design();
+            $design->quizz_id = $quizz->id;
+        }
+        if(isset($data['design_id'])){
+            $design->design_id = $data['design_id'];
+        }
+        
+        $design->designTitle = $data['designTitle'];
+        $design->buttonColor = $data['buttonColor'];
+        $design->buttonTextColor = $data['buttonTextColor'];
+        $design->textColor = $data['textColor'];
+        $design->bgColor = $data['bgColor'];
+        $design->buttonStyle = $data['buttonStyle'];
+        $design->progressBarStyle = $data['progressBarStyle'];
+        $design->save();
+        return response()->json($design);
+    }
     public function uploadImageStartPage($data, $quizz){
 
         if(isset($data['hero_image'])){

@@ -42,4 +42,9 @@ class Quizz extends Model
     {
         return $this->hasMany(VisitLog::class);
     }
+    
+    public function design()
+    {
+        return $this->hasOne(Design::class);
+    }
 }

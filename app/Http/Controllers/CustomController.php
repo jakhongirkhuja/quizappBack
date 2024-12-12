@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CustomCreatePostAnswerRequest;
 use App\Http\Requests\CustomCreatePostQuestionRequest;
 use App\Http\Requests\CustomProjectTitleCreateRequest;
+use App\Http\Requests\CustomQuizDesignRequest;
 use App\Http\Requests\CustomQuizFormPageImageRequest;
 use App\Http\Requests\CustomQuizFormPageTextRequest;
 use App\Http\Requests\CustomQuizInstallButtonRequest;
@@ -14,6 +15,7 @@ use App\Http\Requests\CustomQuizStartPageImageRequest;
 use App\Http\Requests\CustomQuizStartPageTextRequest;
 use App\Http\Requests\CustomQuizTitleRequest;
 use App\Http\Requests\RemoveQuestionRequest;
+use App\Models\Design;
 use App\Models\Project;
 use App\Models\Quizz;
 use App\Services\CustomQuizzService;
@@ -35,7 +37,11 @@ class CustomController extends Controller
             }elseif(request()->page=='questions'){
                 
                 $quizz = Quizz::with('questions.answers')->where('front_id',request()->front_idP)->first();
-            }else{
+            }elseif(request()->page=='design'){
+                
+                $quizz = Quizz::with('design')->where('front_id',request()->front_idP)->first();
+            }
+            else{
                 $quizz = Quizz::with('startPage')->where('front_id',request()->front_idP)->first();
             }
             return response()->json($quizz);
@@ -88,6 +94,19 @@ class CustomController extends Controller
             }
             $this->customQuizzService->createMetas($request->validated(),$quizz);
             return response()->json($quizz,201);
+        }
+        return response()->json([],404);
+    }
+    public function createDesign(CustomQuizDesignRequest $request, $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        $design =null;
+        if($project && request()->front_idP){
+            $quizz = Quizz::with('design')->where('front_id',request()->front_idP)->first();
+            if(!$quizz){
+                $quizz = $this->quizzCreate($project->id);
+            }
+            
+            return  $this->customQuizzService->createDesign($request->validated(), $quizz);
         }
         return response()->json([],404);
     }
