@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\Project;
+use App\Models\Tarif;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Services\ProjectService;
@@ -55,5 +57,15 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out successfully']);
+    }
+    public function userUpdate(UserUpdateRequest $request){
+        $data = $request->validated();
+        $user = User::find(Auth::id());
+        $user->name = $data['name'];
+        $user->password= Hash::make($data['password']);
+        return response()->json($user,201);
+    }
+    public function tarif(){
+        return response()->json(Tarif::orderby('leads','asc')->get());
     }
 }

@@ -3,15 +3,24 @@
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
+use App\Http\Controllers\TarifController;
+use App\Http\Middleware\PaymeMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::post('/user/update', [AuthController::class, 'userUpdate'])->middleware('auth:sanctum'); 
+Route::get('/user/tarif', [AuthController::class, 'tarif'])->middleware('auth:sanctum'); 
+Route::post('/user/paymentOrder', [OrderController::class, 'paymentOrder'])->middleware('auth:sanctum'); 
+Route::get('/user/transactions', [OrderController::class, 'transactions'])->middleware('auth:sanctum'); 
 
 Route::post('/login', [AuthController::class, 'login']); 
 Route::post('/register', [AuthController::class, 'register']); 
@@ -71,6 +80,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [QuizzController::class, 'destroy']); // Delete a quiz
     });
 
+    Route::group(['prefix' => 'tarif'], function () {
+        Route::get('/', [TarifController::class, 'index']); 
+        Route::post('/', [TarifController::class, 'store']); 
+        Route::delete('/{id}', [TarifController::class, 'destroy']);
+    });
+
 });
 
 
@@ -91,3 +106,7 @@ Route::group(['prefix' => 'answers'], function () {
     Route::put('/{id}', [AnswerController::class, 'update']);
     Route::delete('/{id}', [AnswerController::class, 'destroy']);
 });
+
+
+
+Route::post('/payme', [PaymeController::class, 'index'])->middleware(PaymeMiddleware::class);
