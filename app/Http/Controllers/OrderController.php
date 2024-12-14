@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
+use App\Models\Lead;
 use App\Models\Order;
+use App\Models\Quizz;
 use App\Models\UserTransaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,6 +40,16 @@ class OrderController extends Controller
         }
     }
     public function transactions(){
-        return response()->json(UserTransaction::where('user_id', Auth::id())->latest()->get());
+        return response()->json(UserTransaction::with('order')->where('user_id', Auth::id())->latest()->get());
+    }
+    public function leads(){
+        $quizIds = Quizz::where('user_id', Auth::id())->pluck('id');
+        if ($quizIds->isEmpty()) {
+            return response()->json(['data' => [], 'message' => 'No leads found.'], 404);
+        }
+        $leads =Lead::with('quizz')->whereIn('quizz_id', $quizIds)->orderby('seen')->latest()->paginate(40);
+        return response()->json($leads);
+
+        
     }
 }

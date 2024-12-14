@@ -22,6 +22,8 @@ Route::get('/user/tarif', [AuthController::class, 'tarif'])->middleware('auth:sa
 Route::post('/user/paymentOrder', [OrderController::class, 'paymentOrder'])->middleware('auth:sanctum'); 
 Route::get('/user/transactions', [OrderController::class, 'transactions'])->middleware('auth:sanctum'); 
 
+Route::get('/user/leads', [OrderController::class, 'leads'])->middleware('auth:sanctum'); 
+
 Route::post('/login', [AuthController::class, 'login']); 
 Route::post('/register', [AuthController::class, 'register']); 
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

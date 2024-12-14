@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('quizz_id');
+            $table->boolean('seen')->default(false);
             $table->text('ip');
             $table->text('user_agent');
             $table->text('name')->nullable();

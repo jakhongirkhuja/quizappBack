@@ -17,6 +17,7 @@ class Order extends Model
         if($data['halfyear']==1){
             $newPrice = (int) (($price * 6)*0.85);
         }
+        $this->leads =  $tarif->leads;
         $this->price = $newPrice;
         $this->save();
     }

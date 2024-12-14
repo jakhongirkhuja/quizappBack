@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tarif_id');
             $table->integer('halfyear')->default(0);
             $table->unsignedBigInteger('price');
+            $table->unsignedBigInteger('leads')->nullable();
             $table->text('status')->default('pending');
             $table->timestamps();
         });
