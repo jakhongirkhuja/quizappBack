@@ -34,7 +34,7 @@ class CustomCreatePostQuestionRequest extends FormRequest
             'long_text'=>'required',
             'image'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'hidden'=>'required',
-            'selft_input'=>'required',
+            'self_input'=>'required',
             'expanded_footer'=>'required',
             'expanded'=>'required',
         ];

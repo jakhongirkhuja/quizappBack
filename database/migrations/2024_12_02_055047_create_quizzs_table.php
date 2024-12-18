@@ -27,6 +27,7 @@ return new class extends Migration
             $table->text('meta_image')->nullable();
             $table->text('next_question_text')->nullable();
             $table->text('next_to_form')->nullable();
+            $table->boolean('startPage')->default(false);
             $table->timestamps();
         });
     }

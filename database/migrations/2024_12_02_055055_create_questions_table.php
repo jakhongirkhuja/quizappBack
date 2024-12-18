@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('hidden')->default(false);
             $table->integer('order')->default(1);
             $table->text('image')->nullable();
+            $table->boolean('self_input')->default(false);
             $table->boolean('expanded_footer')->default(false);
             $table->boolean('multiple_answers')->default(false);
             $table->boolean('required')->default(true);

@@ -14,6 +14,7 @@ use App\Http\Requests\CustomQuizMetasRequest;
 use App\Http\Requests\CustomQuizStartPageImageRequest;
 use App\Http\Requests\CustomQuizStartPageTextRequest;
 use App\Http\Requests\CustomQuizTitleRequest;
+use App\Http\Requests\CustomStartPageStatusRequest;
 use App\Http\Requests\RemoveQuestionRequest;
 use App\Models\Design;
 use App\Models\Project;
@@ -169,6 +170,20 @@ class CustomController extends Controller
             }
             $this->customQuizzService->uploadImageFormPage($request->validated(),$quizz);
             return response()->json($quizz,201);
+        }
+        return response()->json([],404);
+    }
+    public function startPageStatusUpdate(CustomStartPageStatusRequest $request, $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        if($project && request()->front_idP){
+            $quizz = Quizz::where('front_id',request()->front_idP)->first();
+            if(!$quizz){
+                $quizz = $this->quizzCreate($project->id);
+            }
+            $data = $request->validated();
+            $quizz->startPage =filter_var($data['startPage'], FILTER_VALIDATE_BOOLEAN); 
+            $quizz->save();
+            return response()->json($quizz, 200);
         }
         return response()->json([],404);
     }

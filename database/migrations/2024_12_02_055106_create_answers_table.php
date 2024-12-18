@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('order')->default(1);
             $table->boolean('selected')->default(false);
             $table->timestamp('time_select')->nullable();
+            $table->boolean('type_type')->default(false);
             $table->integer('rank')->nullable();
             $table->text('rank_text_min')->nullable();
             $table->text('rank_text_max')->nullable();

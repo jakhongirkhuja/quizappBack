@@ -192,12 +192,12 @@ class CustomQuizzService{
         $startPage->title = $data['title'];
         $startPage->title_secondary = $data['title_secondary'];
         $startPage->button_text = $data['button_text'];
-        $startPage->name = $data['name'];
-        $startPage->email = $data['email'];
-        $startPage->phone = $data['phone'];
-        $startPage->name_required = $data['name_required'];
-        $startPage->email_required = $data['email_required'];
-        $startPage->phone_required = $data['phone_required'];
+        $startPage->name = filter_var($data['name'], FILTER_VALIDATE_BOOLEAN);
+        $startPage->email =filter_var($data['email'], FILTER_VALIDATE_BOOLEAN);
+        $startPage->phone = filter_var($data['phone'], FILTER_VALIDATE_BOOLEAN);
+        $startPage->name_required = filter_var($data['name_required'], FILTER_VALIDATE_BOOLEAN);
+        $startPage->email_required = filter_var($data['email_required'], FILTER_VALIDATE_BOOLEAN);
+        $startPage->phone_required =filter_var($data['phone_required'], FILTER_VALIDATE_BOOLEAN);
       
         $startPage->save();
         return response()->json($startPage, 201);
@@ -250,7 +250,7 @@ class CustomQuizzService{
         $question->question = $data['question'];
         $question->expanded =filter_var($data['expanded'], FILTER_VALIDATE_BOOLEAN);
         $question->hidden =filter_var($data['hidden'], FILTER_VALIDATE_BOOLEAN);
-        $question->selft_input  = filter_var($data['selft_input'], FILTER_VALIDATE_BOOLEAN);
+        $question->self_input  = filter_var($data['self_input'], FILTER_VALIDATE_BOOLEAN);
         $question->expanded_footer = filter_var($data['expanded_footer'], FILTER_VALIDATE_BOOLEAN);
         $question->required = filter_var($data['required'], FILTER_VALIDATE_BOOLEAN); 
         $question->multiple_answers = filter_var($data['multiple_answers'], FILTER_VALIDATE_BOOLEAN);
@@ -279,6 +279,7 @@ class CustomQuizzService{
             $answers->rank_text_min = $data['rank_text_min'];
             $answers->rank_text_max = $data['rank_text_max'];
             $answers->time_select = $data['time_select'];
+            $answers->type_type = isset($data['type_type'])? filter_var($data['type_type'], FILTER_VALIDATE_BOOLEAN) : false;
             if(isset($data['image'])){
                 $this->deleteOldImage($question->image);
                 $answers->image = $this->moveImageAnswers($data['image']);

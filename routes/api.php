@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomController;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymeController;
 use App\Http\Controllers\ProjectController;
@@ -28,7 +29,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']); 
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::get('/qa/{uuid}', [IndexController::class, 'qa']); 
+
 Route::middleware('auth:sanctum')->group(function () {
+
+
 
     Route::group(['prefix' => 'v1'], function () {
         
@@ -53,8 +58,11 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('{uuid}/quizz/postTitle', [CustomController::class, 'createPostTitle']);
                 Route::post('{uuid}/quizz/startPageImages', [CustomController::class, 'createQuizStartPageImages']);
                 Route::post('{uuid}/quizz/startPageText', [CustomController::class, 'createQuizStartPageText']);
+                Route::post('{uuid}/quizz/startPageStatus', [CustomController::class, 'startPageStatusUpdate']);
                 Route::post('{uuid}/quizz/formPageImages', [CustomController::class, 'createQuizFormPageImages']);
                 Route::post('{uuid}/quizz/formPageText', [CustomController::class, 'createQuizFormPageText']);
+
+
 
                 Route::post('{uuid}/quizz/postQuestions', [CustomController::class, 'createPostQuestions']);
                 Route::post('{uuid}/quizz/postAnswers', [CustomController::class, 'createPostAnswers']);

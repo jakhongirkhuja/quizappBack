@@ -17,12 +17,12 @@ class AuthController extends Controller
 {
     public function login(LoginRequest $request){
         $credentials = $request->validated();
-
+        $user = User::where('email', $request->input('email'))->firstOrFail();
         if (!Auth::attempt($credentials)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $user = User::where('email', $request->input('email'))->firstOrFail();
+       
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

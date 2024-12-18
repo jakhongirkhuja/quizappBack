@@ -17,6 +17,7 @@ class Question extends Model
             'required'=>'boolean',
             'long_text'=>'boolean',
             'scroll'=>'boolean',
+            'self_input'=>'boolean'
         ];
     }
     public function answers()

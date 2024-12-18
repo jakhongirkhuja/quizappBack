@@ -33,7 +33,8 @@ class CustomCreatePostAnswerRequest extends FormRequest
             'rank'=>'nullable',
             'rank_text_max'=>'nullable|max:200',
             'rank_text_min'=>'nullable|max:200',
-            'time_select'=>'nullable'
+            'time_select'=>'nullable',
+            'type_type'=>'nullable',
         ];
     }
 }
