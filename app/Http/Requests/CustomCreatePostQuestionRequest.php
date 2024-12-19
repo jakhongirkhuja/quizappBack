@@ -28,6 +28,7 @@ class CustomCreatePostQuestionRequest extends FormRequest
             'scroll'=>'required',
             'required'=>'required',
             'question'=>'required|min:0|max:255',
+            'question_uz'=>'nullable|min:0|max:255',
             'proportion'=>'required|numeric|min:0|max:4',
             'order'=>'required|min:1',
             'multiple_answers'=>'required',

@@ -25,8 +25,11 @@ class CustomQuizMetasRequest extends FormRequest
             'meta_image'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'meta_favicon'=>'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title'=>'required',
+            'title_uz'=>'nullable',
             'meta_title'=>'required',
+            'meta_title_uz'=>'nullable',
             'meta_description'=>'required',
+            'meta_description_uz'=>'nullable',
         ];
     }
 }

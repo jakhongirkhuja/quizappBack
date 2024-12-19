@@ -16,17 +16,22 @@ return new class extends Migration
             $table->uuid('uuid')->index();
             $table->text('front_id');
             $table->text('title')->nullable();
+            $table->text('title_uz')->nullable();
             $table->unsignedBigInteger('user_id')->index();
             $table->text('url')->unique();
             $table->unsignedBigInteger('project_id')->index();
             $table->boolean('domainType')->default(false); //false= Стандартная, true= На поддомене
             $table->boolean('publish')->default(false);
             $table->text('meta_title')->nullable();
+            $table->text('meta_title_uz')->nullable();
             $table->text('meta_description')->nullable();
+            $table->text('meta_description_uz')->nullable();
             $table->text('meta_favicon')->nullable();
             $table->text('meta_image')->nullable();
             $table->text('next_question_text')->nullable();
+            $table->text('next_question_text_uz')->nullable();
             $table->text('next_to_form')->nullable();
+            $table->text('next_to_form_uz')->nullable();
             $table->boolean('startPage')->default(false);
             $table->timestamps();
         });

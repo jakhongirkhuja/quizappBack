@@ -23,8 +23,11 @@ class CustomQuizFormPageTextRequest extends FormRequest
     {
         return [
             'title'=>'nullable|max:220',
+            'title_uz'=>'nullable|max:220',
             'title_secondary'=>'nullable|max:220',
+            'title_secondary_uz'=>'nullable|max:220',
             'button_text'=>'nullable|max:220',
+            'button_text_uz'=>'nullable|max:220',
             'phone'=>'nullable|min:0',
             'email'=>'nullable|min:0',
             'name'=>'nullable|min:0',

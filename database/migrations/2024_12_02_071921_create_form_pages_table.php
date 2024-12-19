@@ -17,8 +17,11 @@ return new class extends Migration
             $table->text('hero_image')->nullable();
             $table->text('hero_image_mobi')->nullable();
             $table->text('title')->nullable();
+            $table->text('title_uz')->nullable();
             $table->text('title_secondary')->nullable();
+            $table->text('title_secondary_uz')->nullable();
             $table->text('button_text')->nullable();
+            $table->text('button_text_uz')->nullable();
             $table->boolean('name')->default(true);
             $table->boolean('email')->default(true);
             $table->boolean('phone')->default(true);

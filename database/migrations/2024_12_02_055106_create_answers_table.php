@@ -19,7 +19,9 @@ return new class extends Migration
             $table->text('image')->nullable();
             $table->text('file')->nullable();
             $table->text('text')->nullable();
+            $table->text('text_uz')->nullable();
             $table->text('secondary_text')->nullable();
+            $table->text('secondary_text_uz')->nullable();
             $table->integer('order')->default(1);
             $table->boolean('selected')->default(false);
             $table->timestamp('time_select')->nullable();

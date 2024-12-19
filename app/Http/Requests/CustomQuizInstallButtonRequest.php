@@ -23,7 +23,9 @@ class CustomQuizInstallButtonRequest extends FormRequest
     {
         return [
             'next_question_text'=>'nullable|string|max:14',
+            'next_question_text_uz'=>'nullable|string|max:14',
             'next_to_form'=>'nullable|string|max:13',
+            'next_to_form_uz'=>'nullable|string|max:13',
         ];
     }
 }

@@ -19,8 +19,14 @@ class CustomQuizzService{
         if(isset($data['next_question_text'])){
             $quizz->next_question_text = $data['next_question_text'];
         }
+        if(isset($data['next_question_text_uz'])){
+            $quizz->next_question_text_uz = $data['next_question_text_uz'];
+        }
         if(isset($data['next_to_form'])){
             $quizz->next_to_form = $data['next_to_form'];
+        }
+        if(isset($data['next_to_form_uz'])){
+            $quizz->next_to_form = $data['next_to_form_uz'];
         }
         $quizz->save();
         return response()->json($quizz,201);
@@ -76,6 +82,16 @@ class CustomQuizzService{
         $quizz->title = $data['title'];
         $quizz->meta_title = $data['meta_title'];
         $quizz->meta_description = $data['meta_description'];
+
+        if(isset($data['title_uz'])){
+            $quizz->title_uz = $data['title_uz'];
+        }
+        if(isset($data['meta_title_uz'])){
+            $quizz->meta_title_uz = $data['meta_title_uz'];
+        }
+        if(isset($data['meta_description_uz'])){
+            $quizz->meta_description_uz = $data['meta_description_uz'];
+        }
         $quizz->save();
         return response()->json($quizz, 201);
     }
@@ -171,12 +187,19 @@ class CustomQuizzService{
             $startPage = new StartPage();
             $startPage->quizz_id = $quizz->id;
         }
-        $startPage->slogan_text = $data['slogan_text'];
-        $startPage->title = $data['title'];
-        $startPage->title_secondary = $data['title_secondary'];
-        $startPage->button_text = $data['button_text'];
-        $startPage->phoneNumber = $data['phoneNumber'];
-        $startPage->companyName_text = $data['companyName_text'];
+        
+        $startPage->slogan_text =isset($data['slogan_text'])? $data['slogan_text'] : null;
+        $startPage->slogan_text_uz = isset($data['slogan_text_uz'])? $data['slogan_text_uz'] : null;
+        $startPage->title = isset($data['title'])? $data['title'] : null;
+        $startPage->title_uz =  isset($data['title_uz'])? $data['title_uz'] : null;
+        $startPage->title_secondary = isset($data['title_secondary'])? $data['title_secondary'] : null;
+        $startPage->title_secondary_uz = isset($data['title_secondary_uz'])? $data['title_secondary_uz'] : null;
+        $startPage->button_text = isset($data['button_text'])? $data['button_text'] : null;
+        $startPage->button_text_uz =isset($data['button_text_uz'])? $data['button_text_uz'] : null;
+        $startPage->phoneNumber = isset($data['phoneNumber'])? $data['phoneNumber'] : null ;
+        $startPage->phoneNumber_uz = isset($data['phoneNumber_uz'])? $data['phoneNumber_uz'] : null ;
+        $startPage->companyName_text =  isset($data['companyName_text'])? $data['companyName_text'] : null ;
+        $startPage->companyName_text_uz =isset($data['companyName_text_uz'])? $data['companyName_text_uz'] : null;
         $startPage->design_type = $data['design_type'];
         $startPage->design_alignment = $data['design_alignment'];
         $startPage->save();
@@ -189,9 +212,12 @@ class CustomQuizzService{
             $startPage->quizz_id = $quizz->id;
         }
        
-        $startPage->title = $data['title'];
-        $startPage->title_secondary = $data['title_secondary'];
-        $startPage->button_text = $data['button_text'];
+        $startPage->title = isset($data['title'])? $data['title'] : null;
+        $startPage->title_uz =  isset($data['title_uz'])? $data['title_uz'] : null;
+        $startPage->title_secondary =isset($data['title_secondary'])? $data['title_secondary'] : null;
+        $startPage->title_secondary_uz = isset($data['title_secondary_uz'])? $data['title_secondary_uz'] : null;
+        $startPage->button_text = isset($data['button_text'])? $data['button_text'] : null;
+        $startPage->button_text_uz =isset($data['button_text_uz'])? $data['button_text_uz'] : null;
         $startPage->name = filter_var($data['name'], FILTER_VALIDATE_BOOLEAN);
         $startPage->email =filter_var($data['email'], FILTER_VALIDATE_BOOLEAN);
         $startPage->phone = filter_var($data['phone'], FILTER_VALIDATE_BOOLEAN);
@@ -247,7 +273,8 @@ class CustomQuizzService{
             $question->uuid = Str::orderedUuid();
         }
         $question->type = $data['type'];
-        $question->question = $data['question'];
+        $question->question = isset($data['question'])? $data['question'] : null;
+        $question->question_uz = isset($data['question_uz'])? $data['question_uz'] : null;
         $question->expanded =filter_var($data['expanded'], FILTER_VALIDATE_BOOLEAN);
         $question->hidden =filter_var($data['hidden'], FILTER_VALIDATE_BOOLEAN);
         $question->self_input  = filter_var($data['self_input'], FILTER_VALIDATE_BOOLEAN);
@@ -272,12 +299,16 @@ class CustomQuizzService{
             $answers->front_id = $data['front_id'];
             $answers->order = $data['order'];
             $answers->selected = filter_var($data['selected'], FILTER_VALIDATE_BOOLEAN);
-            $answers->text = $data['text'];
-            $answers->secondary_text = $data['secondary_text'];
+            $answers->text = isset($data['text'])? $data['text'] : null;
+            $answers->text_uz = isset($data['text_uz'])? $data['text_uz'] : null;
+            $answers->secondary_text =isset($data['secondary_text'])? $data['secondary_text'] : null;
+            $answers->secondary_text_uz = isset($data['secondary_text_uz'])? $data['secondary_text_uz'] : null;
             
             $answers->rank = $data['rank'];
-            $answers->rank_text_min = $data['rank_text_min'];
-            $answers->rank_text_max = $data['rank_text_max'];
+            $answers->rank_text_min = isset($data['rank_text_min'])? $data['rank_text_min'] : null;
+            $answers->rank_text_min_uz =  isset($data['rank_text_min_uz'])? $data['rank_text_min_uz'] : null;
+            $answers->rank_text_max =isset($data['rank_text_max'])? $data['rank_text_max'] : null;
+            $answers->rank_text_max_uz = isset($data['rank_text_max_uz'])? $data['rank_text_max_uz'] : null;
             $answers->time_select = $data['time_select'];
             $answers->type_type = isset($data['type_type'])? filter_var($data['type_type'], FILTER_VALIDATE_BOOLEAN) : false;
             if(isset($data['image'])){

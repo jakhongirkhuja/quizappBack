@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('quizz_id')->index();
             $table->text('type');
             $table->text('question');
+            $table->text('question_uz')->nullable();
             $table->boolean('expanded')->default(true);
             $table->boolean('hidden')->default(false);
             $table->integer('order')->default(1);
