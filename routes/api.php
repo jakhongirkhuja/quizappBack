@@ -30,7 +30,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/qa/{uuid}', [IndexController::class, 'qa']); 
-
+Route::post('/submitForm/{uuid}', [IndexController::class, 'submitForm']); 
 Route::middleware('auth:sanctum')->group(function () {
 
 

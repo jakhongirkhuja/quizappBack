@@ -17,13 +17,17 @@ use App\Http\Requests\CustomQuizTitleRequest;
 use App\Http\Requests\CustomStartPageStatusRequest;
 use App\Http\Requests\RemoveQuestionRequest;
 use App\Models\Design;
+use App\Models\FormPage;
 use App\Models\Project;
 use App\Models\Quizz;
+use App\Models\StartPage;
 use App\Services\CustomQuizzService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use PhpParser\Node\Stmt\For_;
+
 class CustomController extends Controller
 {
     private $customQuizzService;
@@ -57,6 +61,22 @@ class CustomController extends Controller
         $quiz->url = (string)Str::orderedUuid().(string)Carbon::now()->timestamp;
         $quiz->project_id = $project_id;
         $quiz->save();
+        $newDesign = new Design();
+        $newDesign->bgColor='#FFFFFF';
+        $newDesign->buttonColor="#FBCBBC";
+        $newDesign->buttonStyle=0;
+        $newDesign->buttonTextColor="#00000";
+        $newDesign->designTitle="Светлая";
+        $newDesign->progressBarStyle=0;
+        $newDesign->quizz_id=$quiz->id;
+        $newDesign->textColor="#00000";
+        $newDesign->save();
+        $formPage = new FormPage();
+        $formPage->quizz_id = $quiz->id;
+        $formPage->save();
+        $startPage = new StartPage();
+        $startPage->quizz_id = $quiz->id;
+        $startPage->save();
         return $quiz;
     }
     public function removeProject($uuid){

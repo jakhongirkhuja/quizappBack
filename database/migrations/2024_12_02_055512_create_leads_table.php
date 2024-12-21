@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('phone')->nullable();
             $table->json('answers')->nullable();
             $table->timestamps();
+            
         });
     }
 

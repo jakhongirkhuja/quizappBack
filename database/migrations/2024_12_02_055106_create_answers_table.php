@@ -28,7 +28,9 @@ return new class extends Migration
             $table->boolean('type_type')->default(false);
             $table->integer('rank')->nullable();
             $table->text('rank_text_min')->nullable();
+            $table->text('rank_text_min_uz')->nullable();
             $table->text('rank_text_max')->nullable();
+            $table->text('rank_text_max_uz')->nullable();
             $table->timestamps();
         });
     }
