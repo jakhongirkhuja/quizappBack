@@ -9,6 +9,9 @@ class Lead extends Model
    
     public function quizz()
     {
-        return $this->hasOne(Quizz::class);
+        return $this->belongsTo(Quizz::class);
+    }
+    public function project(){
+        return $this->belongsTo(Project::class);
     }
 }

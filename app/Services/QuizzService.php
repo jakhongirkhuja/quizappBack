@@ -14,15 +14,17 @@ class QuizzService
     public function getAllQuizzes()
     {
         if(request()->project_id){
+            
             $project = Project::with([
                 'quizzs' => function($query) {
-                    $query->select('id', 'title', 'project_id') // Select specific columns from quizzs
+                    $query->select('*') // Select specific columns from quizzs
                         ->withCount('leads') // Get the count of leads related to each quiz
-                        ->withCount('visitLog'); // Get the count of visitLogs related to each quiz
+                        ->withCount('visitLog')->latest(); // Get the count of visitLogs related to each quiz
                 }
             ])->where('uuid', request()->project_id)->where('user_id',Auth::id())->first();
+            
             if($project){
-                return $project->quizzs()->latest()->get();
+                return $project->quizzs;
             }
         }
         return [];

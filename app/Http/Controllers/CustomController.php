@@ -63,13 +63,13 @@ class CustomController extends Controller
         $quiz->save();
         $newDesign = new Design();
         $newDesign->bgColor='#FFFFFF';
-        $newDesign->buttonColor="#FBCBBC";
+        $newDesign->buttonColor="#cf307a";
         $newDesign->buttonStyle=0;
-        $newDesign->buttonTextColor="#00000";
+        $newDesign->buttonTextColor="#FFFFFF";
         $newDesign->designTitle="Светлая";
         $newDesign->progressBarStyle=0;
         $newDesign->quizz_id=$quiz->id;
-        $newDesign->textColor="#00000";
+        $newDesign->textColor="#363636";
         $newDesign->save();
         $formPage = new FormPage();
         $formPage->quizz_id = $quiz->id;

@@ -43,13 +43,61 @@ class OrderController extends Controller
         return response()->json(UserTransaction::with('order')->where('user_id', Auth::id())->latest()->get());
     }
     public function leads(){
-        $quizIds = Quizz::where('user_id', Auth::id())->pluck('id');
+        
+        
+        if(request()->quizz_id){
+            $quizIds =  Quizz::where('user_id', Auth::id())->where('id', request()->quizz_id)->pluck('id');
+        }else{
+            $quizIds = Quizz::where('user_id', Auth::id())->pluck('id');
+        }
+        
+        
+       
         if ($quizIds->isEmpty()) {
             return response()->json(['data' => [], 'message' => 'No leads found.'], 404);
         }
-        $leads =Lead::with('quizz')->whereIn('quizz_id', $quizIds)->orderby('seen')->latest()->paginate(40);
+        if(request()->new){
+            $leads =Lead::with('quizz','project')->whereIn('quizz_id', $quizIds)->where('seen',false)->latest()->paginate(40);
+        }else{
+            $leads =Lead::with('quizz','project')->whereIn('quizz_id', $quizIds)->orderby('seen')->latest()->paginate(40);
+        }
+        
         return response()->json($leads);
 
         
+    }
+    public function leadsDelete($id){
+        $lead = Lead::with('project')->find($id);
+        if($lead){
+            if($lead->project && $lead->project->user_id==Auth::id()){
+                $lead->delete();
+                return response()->json($lead,204);
+            }
+            
+        }
+        return response()->json(null,404);
+    }
+    public function leadsSeen($id){
+        $lead = Lead::with('project')->find($id);
+        if($lead){
+            if($lead->project && $lead->project->user_id==Auth::id()){
+                $lead->seen = true;
+                $lead->save();
+                return response()->json($lead,200);
+            }
+            
+        }
+        return response()->json(null,404);
+    }
+    public function quizzes(){
+        return response()->json(Quizz::where('user_id', Auth::id())->latest()->get());
+    }
+    public function statistics(){
+        $quizIds = Quizz::where('user_id', Auth::id())->pluck('id');
+        $leadsSeen = Lead::whereIn('quizz_id', $quizIds)->where('seen', false)->count();
+        $leadsAll = Lead::whereIn('quizz_id', $quizIds)->count();
+        $data['seen']=$leadsSeen;
+        $data['leads'] = $leadsAll;
+        return response()->json($data);
     }
 }

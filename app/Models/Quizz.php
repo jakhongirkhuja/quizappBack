@@ -29,6 +29,7 @@ class Quizz extends Model
     {
         return $this->hasOne(StartPage::class);
     }
+    
     public function formPage()
     {
         return $this->hasOne(FormPage::class);

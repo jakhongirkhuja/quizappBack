@@ -23,7 +23,12 @@ Route::get('/user/tarif', [AuthController::class, 'tarif'])->middleware('auth:sa
 Route::post('/user/paymentOrder', [OrderController::class, 'paymentOrder'])->middleware('auth:sanctum'); 
 Route::get('/user/transactions', [OrderController::class, 'transactions'])->middleware('auth:sanctum'); 
 
-Route::get('/user/leads', [OrderController::class, 'leads'])->middleware('auth:sanctum'); 
+
+Route::get('/user/statistics', [OrderController::class, 'statistics'])->middleware('auth:sanctum');
+Route::get('/user/quizzes', [OrderController::class, 'quizzes'])->middleware('auth:sanctum');
+Route::get('/user/leads', [OrderController::class, 'leads'])->middleware('auth:sanctum');
+Route::get('/user/leads/{id}/delete', [OrderController::class, 'leadsDelete'])->middleware('auth:sanctum'); 
+Route::get('/user/leads/{id}/seen', [OrderController::class, 'leadsSeen'])->middleware('auth:sanctum'); 
 
 Route::post('/login', [AuthController::class, 'login']); 
 Route::post('/register', [AuthController::class, 'register']); 
@@ -31,6 +36,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 Route::get('/qa/{uuid}', [IndexController::class, 'qa']); 
 Route::post('/submitForm/{uuid}', [IndexController::class, 'submitForm']); 
+Route::post('/visitlog/{uuid}', [IndexController::class, 'visitlog']); 
 Route::middleware('auth:sanctum')->group(function () {
 
 
@@ -38,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::group(['prefix' => 'v1'], function () {
         
         Route::group(['prefix' => 'custom'], function () {
-
+            
             Route::group(['prefix' => 'project'], function () {
 
                 Route::get('{uuid}/quizz', [CustomController::class, 'getQuizz']);
