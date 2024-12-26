@@ -9,6 +9,9 @@ use App\Models\Project;
 use App\Models\Question;
 use App\Models\Quizz;
 use App\Models\StartPage;
+use App\Models\Templete;
+use App\Models\TempleteQuestion;
+use App\Models\TempleteStartPage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
@@ -336,6 +339,85 @@ class CustomQuizzService{
             $question->delete();
         }
         return response([], 204);
+    }
+    public function createFromTemplete($quizz, $template_id){
+        $templete = Templete::with('questions.answers','startpage')->find($template_id);
+        
+        if($templete){
+            $quizz->title = $templete->title;
+            $quizz->title_uz = $templete->title_uz;
+            $quizz->meta_title = $templete->meta_title;
+            $quizz->meta_title_uz = $templete->meta_title_uz;
+            $quizz->meta_description = $templete->meta_description;
+            $quizz->meta_description_uz = $templete->meta_description_uz;
+            $quizz->meta_favicon = $templete->meta_favicon;
+            $quizz->meta_image = $templete->meta_image;
+            $quizz->next_question_text = $templete->next_question_text;
+            $quizz->next_question_text_uz = $templete->next_question_text_uz;
+            $quizz->next_to_form = $templete->next_to_form;
+            $quizz->next_to_form_uz = $templete->next_to_form_uz;
+            
+            
+            $templeteStartPage = $templete->startpage;
+
+            if($templeteStartPage){
+                $quizz->startPage = true;
+                $startPage = StartPage::where('quizz_id',$quizz->id )->first(); 
+                $startPage->hero_image = $templeteStartPage->hero_image;
+                $startPage->hero_image_mobi = $templeteStartPage->hero_image_mobi;
+                $startPage->logo = $templeteStartPage->logo;
+                $startPage->slogan_text = $templeteStartPage->slogan_text;
+                $startPage->slogan_text_uz = $templeteStartPage->slogan_text_uz;
+                $startPage->title = $templeteStartPage->title;
+                $startPage->title_uz = $templeteStartPage->title_uz;
+                $startPage->title_secondary = $templeteStartPage->title_secondary;
+                $startPage->title_secondary_uz = $templeteStartPage->title_secondary_uz;
+                $startPage->button_text = $templeteStartPage->button_text;
+                $startPage->button_text_uz = $templeteStartPage->button_text_uz;
+                $startPage->phoneNumber = $templeteStartPage->phoneNumber;
+                $startPage->phoneNumber_uz = $templeteStartPage->phoneNumber_uz;
+                $startPage->companyName_text = $templeteStartPage->companyName_text;
+                $startPage->companyName_text_uz = $templeteStartPage->companyName_text_uz;
+                $startPage->design_type = $templeteStartPage->design_type;
+                $startPage->design_alignment = $templeteStartPage->design_alignment;
+                $startPage->save();
+            }
+            $quizz->save();
+            $templeteQuestions = TempleteQuestion::with('answers')->where('templete_id',$template_id )->get();
+            foreach($templeteQuestions as $index => $templeteQuestion){
+                $question= new Question();
+                $question->front_id  =Str::orderedUuid()->toString();
+                $question->quizz_id = $quizz->id;
+                $question->uuid = Str::orderedUuid()->toString();
+                $question->type = $templeteQuestion->type;
+                $question->question = $templeteQuestion->question;
+                $question->question_uz = $templeteQuestion->question_uz;
+                $question->order = $index+1;
+                $question->save();
+                $templeteAnswers = $templeteQuestion->answers;
+                foreach ($templeteAnswers as $key => $templeteAnswer) {
+                    $answer = new Answer();
+                    $answer->front_id = Str::orderedUuid()->toString();
+                    $answer->question_id =$question->id;
+                    $answer->image = $templeteAnswer->image;
+                    $answer->image = $templeteAnswer->image;
+                    $answer->text = $templeteAnswer->text;
+                    $answer->text_uz = $templeteAnswer->text_uz;
+                    $answer->secondary_text = $templeteAnswer->secondary_text;
+                    $answer->secondary_text_uz = $templeteAnswer->secondary_text_uz;
+                    $answer->time_select = $templeteAnswer->time_select;
+                    $answer->rank = $templeteAnswer->rank;
+                    $answer->rank_text_min = $templeteAnswer->rank_text_min;
+                    $answer->rank_text_min_uz = $templeteAnswer->rank_text_min_uz;
+                    $answer->rank_text_max = $templeteAnswer->rank_text_max;
+                    $answer->rank_text_max_uz = $templeteAnswer->rank_text_max_uz;
+                    $answer->order = $key+1;
+                    $answer->save();
+                }
+            }
+            return response()->json($quizz);
+        }
+        return response()->json([], 404);
     }
     public function removeProject($project){
         $quizes = $project->quizzs;

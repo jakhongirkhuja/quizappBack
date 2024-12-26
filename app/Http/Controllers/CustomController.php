@@ -21,6 +21,7 @@ use App\Models\FormPage;
 use App\Models\Project;
 use App\Models\Quizz;
 use App\Models\StartPage;
+use App\Models\Templete;
 use App\Services\CustomQuizzService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -33,6 +34,9 @@ class CustomController extends Controller
     private $customQuizzService;
     public function __construct(CustomQuizzService $customQuizzService) {
         $this->customQuizzService = $customQuizzService;
+    }
+    public function templetes(){
+        return response()->json(Templete::all());
     }
     public function getQuizz($uuid){
         $project = Project::where('uuid', $uuid)->where('user_id', Auth::id())->first();
@@ -78,6 +82,14 @@ class CustomController extends Controller
         $startPage->quizz_id = $quiz->id;
         $startPage->save();
         return $quiz;
+    }
+    public function createFromTemplete(Request $request, $uuid){
+        $project = Project::with('quizzs.questions.answers')->where('uuid', $uuid)->where('user_id', Auth::id())->first();
+        if($project){
+            $quizz = $this->quizzCreate($project->id);
+            return $this->customQuizzService->createFromTemplete($quizz, $request->template_id);
+        }
+        return response()->json([],404);
     }
     public function removeProject($uuid){
         $project = Project::with('quizzs.questions.answers')->where('uuid', $uuid)->where('user_id', Auth::id())->first();

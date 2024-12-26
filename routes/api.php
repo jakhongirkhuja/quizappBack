@@ -10,6 +10,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuizzController;
 use App\Http\Controllers\TarifController;
+use App\Http\Controllers\TempleteController;
 use App\Http\Middleware\PaymeMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,12 +38,17 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 Route::get('/qa/{uuid}', [IndexController::class, 'qa']); 
 Route::post('/submitForm/{uuid}', [IndexController::class, 'submitForm']); 
 Route::post('/visitlog/{uuid}', [IndexController::class, 'visitlog']); 
+
+
+Route::get('/createTarif',[TempleteController::class, 'createTarifs']);
+Route::get('/createTemplete',[TempleteController::class, 'createTemplete']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
 
 
     Route::group(['prefix' => 'v1'], function () {
-        
+        Route::get('templetes', [CustomController::class, 'templetes']);
         Route::group(['prefix' => 'custom'], function () {
             
             Route::group(['prefix' => 'project'], function () {
@@ -53,8 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
                 
                 Route::post('{uuid}/postTitle', [CustomController::class, 'createProjectTitle']);
                 Route::post('{uuid}/remove', [CustomController::class, 'removeProject']);
+
+                Route::post('{uuid}/quizz/createFromTemplete', [CustomController::class, 'createFromTemplete']);
                 Route::post('{uuid}/quizz/remove', [CustomController::class, 'removeQuiz']);
-                
                 Route::post('{uuid}/quizz/metas', [CustomController::class, 'createMetas']);
                 Route::post('{uuid}/quizz/design', [CustomController::class, 'createDesign']);
                 Route::post('{uuid}/quizz/install', [CustomController::class, 'createInstall']);
