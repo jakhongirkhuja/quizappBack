@@ -470,7 +470,7 @@ class CustomQuizzService{
         $question = Question::with('answers')->where('front_id',$data['question_id'])->first();
         if($question){
             $newQuestion = $question->replicate();
-            $question->front_id  =round(microtime(true) * 1000);
+            $newQuestion->front_id  =round(microtime(true) * 1000);
             $newQuestion->order = Question::where('quizz_id', $question->quizz_id)->count();
             $newQuestion->save();
             $arrayAnswer =[];
