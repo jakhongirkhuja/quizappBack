@@ -338,7 +338,7 @@ class CustomQuizzService{
             }
             $question->delete();
         }
-        return response([], 204);
+        return response([], 200);
     }
     public function createFromTemplete($quizz, $template_id){
         $templete = Templete::with('questions.answers','startpage')->find($template_id);
@@ -470,19 +470,22 @@ class CustomQuizzService{
         $question = Question::with('answers')->where('front_id',$data['question_id'])->first();
         if($question){
             $newQuestion = $question->replicate();
+            $question->front_id  =round(microtime(true) * 1000);
             $newQuestion->order = Question::where('quizz_id', $question->quizz_id)->count();
             $newQuestion->save();
             $arrayAnswer =[];
-            foreach ($question->answers as $answer) {
+            foreach ($question->answers as $key => $answer) {
                 $newAnswer = $answer->replicate();
+                $newAnswer->front_id = round(microtime(true) * 1000)+$key;
                 $newAnswer->question_id = $newQuestion->id; 
                 $newAnswer->save();
                 $arrayAnswer[] = $newAnswer;
             }
             $d['question']= $newQuestion;
             $d['answers']=$arrayAnswer;
-            return response()->json($d, 201);
+            return response()->json($d, 200);
         }
+        return response()->json([],404);
     }
     public function changeOrder($data){
         $questions = $data['questions'];
