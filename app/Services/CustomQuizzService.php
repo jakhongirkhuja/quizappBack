@@ -484,4 +484,18 @@ class CustomQuizzService{
             return response()->json($d, 201);
         }
     }
+    public function changeOrder($data){
+        $questions = $data['questions'];
+        foreach ($questions as $question) {
+            $id = $question['id'];
+            $order = $question['order'];
+            $question = Question::where('front_id',$id )->first();
+            if($question){
+                $question->order = $order;
+                $question->save();
+            }
+            
+        }
+        return response()->json([],200);
+    }
 }

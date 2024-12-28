@@ -45,7 +45,12 @@ class CustomController extends Controller
                 $quizz = Quizz::with('formPage')->where('front_id',request()->front_idP)->first();
             }elseif(request()->page=='questions'){
                 
-                $quizz = Quizz::with('questions.answers')->where('front_id',request()->front_idP)->first();
+                $quizz = Quizz::with([
+                    'questions' => function ($query) {
+                        $query->orderBy('order', 'asc');
+                    },
+                    'questions.answers'
+                ])->where('front_id',request()->front_idP)->first();
             }elseif(request()->page=='design'){
                 
                 $quizz = Quizz::with('design')->where('front_id',request()->front_idP)->first();
@@ -280,6 +285,13 @@ class CustomController extends Controller
         $project = Project::where('uuid', $uuid)->first();
         if($project && request()->front_idP){
             return $this->customQuizzService->duplicateQuestions($request->validated());
+        }
+        return response()->json([],404);
+    }
+    public function changeOrder(Request $request, $uuid){
+        $project = Project::where('uuid', $uuid)->first();
+        if($project && request()->front_idP){
+            return $this->customQuizzService->changeOrder($request->all());
         }
         return response()->json([],404);
     }

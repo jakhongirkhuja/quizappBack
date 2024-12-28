@@ -82,6 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::post('{uuid}/quizz/postAnswers', [CustomController::class, 'createPostAnswers']);
                 Route::post('{uuid}/quizz/removeQuestions', [CustomController::class, 'removeQuestion']);
                 Route::post('{uuid}/quizz/duplicateQuestions', [CustomController::class, 'duplicateQuestions']);
+                Route::post('{uuid}/quizz/changeOrder', [CustomController::class, 'changeOrder']);
             });
         });
         

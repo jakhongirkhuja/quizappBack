@@ -63,8 +63,8 @@ class TempleteController extends Controller
                         'phoneNumber_uz' => '+998123456789',
                         'companyName_text' => 'Дизайн агентство',
                         'companyName_text_uz' => 'Dizayn agentligi',
-                        'design_type' => 1,
-                        'design_alignment' => 1,
+                        'design_type' => 0,
+                        'design_alignment' => 0,
                     ],
                     'questions' => [
                     [
@@ -236,8 +236,8 @@ class TempleteController extends Controller
                         'phoneNumber_uz' => '+998987654321',
                         'companyName_text' => 'Car Finder Agency',
                         'companyName_text_uz' => 'Avtomobil qidiruv agentligi',
-                        'design_type' => 2,
-                        'design_alignment' => 1,
+                        'design_type' => 0,
+                        'design_alignment' => 2,
                     ],
                     'questions' => [
                         [
@@ -409,8 +409,8 @@ class TempleteController extends Controller
                         'phoneNumber_uz' => '+998987654321',
                         'companyName_text' => 'Агентство туристических экспертов',
                         'companyName_text_uz' => 'Sayohat mutaxassislari agentligi',
-                        'design_type' => 3,
-                        'design_alignment' => 2,
+                        'design_type' => 0,
+                        'design_alignment' => 0,
                     ],
                     'questions' => [
                         [
@@ -684,8 +684,8 @@ class TempleteController extends Controller
                         'phoneNumber_uz' => '+998987654321',
                         'companyName_text' => 'Медицинский центр надежды',
                         'companyName_text_uz' => 'Umid tibbiyot markazi',
-                        'design_type' => 4,
-                        'design_alignment' => 1,
+                        'design_type' => 0,
+                        'design_alignment' => 2,
                     ],
                 ],
                 'Learning Center' => [
@@ -717,7 +717,7 @@ class TempleteController extends Controller
                         'phoneNumber_uz' => '+998123456789',
                         'companyName_text' => 'Образовательный центр знаний',
                         'companyName_text_uz' => 'Bilim taʼlim markazi',
-                        'design_type' => 2,
+                        'design_type' => 1,
                         'design_alignment' => 0,
                     ],
                     'questions' => [
