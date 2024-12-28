@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+Route::get('/check', [AuthController::class, 'check']);
 
 Route::post('/user/update', [AuthController::class, 'userUpdate'])->middleware('auth:sanctum'); 
 Route::get('/user/tarif', [AuthController::class, 'tarif'])->middleware('auth:sanctum'); 

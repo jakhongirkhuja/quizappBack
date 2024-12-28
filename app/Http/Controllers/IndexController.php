@@ -35,7 +35,7 @@ class IndexController extends Controller
         $quizz = Quizz::where('url',$uud)->first();
         
         if($quizz){
-            $leads = Lead::where('phone', $request->phone)->first();
+            $leads = Lead::where('phone', $request->phone)->where('quizz_id',$quizz->id)->first();
             if($leads){
                 return response()->json($leads,201);
             }

@@ -100,10 +100,12 @@ class CustomController extends Controller
     }
     public function removeQuiz($uuid){
         $project = Project::where('uuid', $uuid)->where('user_id', Auth::id())->first();
+       
         if($project && request()->front_idP){
             $quizz = Quizz::with('questions.answers')->where('front_id',request()->front_idP)->first();
             if($quizz){
-                $this->customQuizzService->removeQuizz($quizz);
+               
+               return $this->customQuizzService->removeQuizz($quizz);
             }
         }
         return response()->json([],404);
@@ -268,6 +270,7 @@ class CustomController extends Controller
     }
     public function removeQuestion(RemoveQuestionRequest $request,  $uuid){
         $project = Project::where('uuid', $uuid)->first();
+       
         if($project && request()->front_idP){
             return $this->customQuizzService->removeQuestion($request->validated());
         }

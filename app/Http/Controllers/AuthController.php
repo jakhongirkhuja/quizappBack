@@ -7,6 +7,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\Project;
+use App\Models\StartPage;
 use App\Models\Tarif;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -15,6 +16,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
+    public function check(){
+        $startPage =StartPage::first();
+        return response()->json($startPage);
+    }
     public function login(LoginRequest $request){
         $credentials = $request->validated();
         $user = User::where('email', $request->input('email'))->firstOrFail();

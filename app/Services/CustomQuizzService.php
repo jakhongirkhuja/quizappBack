@@ -380,13 +380,14 @@ class CustomQuizzService{
                 $startPage->companyName_text_uz = $templeteStartPage->companyName_text_uz;
                 $startPage->design_type = $templeteStartPage->design_type;
                 $startPage->design_alignment = $templeteStartPage->design_alignment;
+               
                 $startPage->save();
             }
             $quizz->save();
             $templeteQuestions = TempleteQuestion::with('answers')->where('templete_id',$template_id )->get();
             foreach($templeteQuestions as $index => $templeteQuestion){
                 $question= new Question();
-                $question->front_id  =Str::orderedUuid()->toString();
+                $question->front_id  =round(microtime(true) * 1000);
                 $question->quizz_id = $quizz->id;
                 $question->uuid = Str::orderedUuid()->toString();
                 $question->type = $templeteQuestion->type;
@@ -397,7 +398,7 @@ class CustomQuizzService{
                 $templeteAnswers = $templeteQuestion->answers;
                 foreach ($templeteAnswers as $key => $templeteAnswer) {
                     $answer = new Answer();
-                    $answer->front_id = Str::orderedUuid()->toString();
+                    $answer->front_id = round(microtime(true) * 1000);
                     $answer->question_id =$question->id;
                     $answer->image = $templeteAnswer->image;
                     $answer->image = $templeteAnswer->image;
@@ -469,6 +470,7 @@ class CustomQuizzService{
         $question = Question::with('answers')->where('front_id',$data['question_id'])->first();
         if($question){
             $newQuestion = $question->replicate();
+            $newQuestion->order = Question::where('quizz_id', $question->quizz_id)->count();
             $newQuestion->save();
             $arrayAnswer =[];
             foreach ($question->answers as $answer) {
