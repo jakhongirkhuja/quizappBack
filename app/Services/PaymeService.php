@@ -7,6 +7,10 @@ use App\Models\UserTransaction;
 use Illuminate\Support\Facades\Log;
 
 class PaymeService{
+    private $orderService;
+    public function __construct(OrderService $orderService) {
+        $this->orderService = $orderService;
+    }
     public function checkPerformTransaction($req){
         if (empty($req->params['account'])) {
             $response = [
@@ -229,17 +233,7 @@ class PaymeService{
             $transaction->perform_time = $ldate;
             $transaction->perform_time_unix = str_replace('.', '', $currentMillis);
             $transaction->update();
-            $completed_order = Order::where('id', $transaction->order_id)->first();
-            $completed_order->status = 'payed';
-            $completed_order->save();
-            $userTransaction = new UserTransaction();
-            $userTransaction->user_id = $completed_order->user_id;
-            $userTransaction->amount = $completed_order->price;
-            $userTransaction->sign= true;
-            $userTransaction->service = 'payment';
-            $userTransaction->service_id = $completed_order->id;
-            $userTransaction->action_user_id =  $completed_order->user_id;
-            $userTransaction->save();
+            $this->orderService->saveOrder($transaction);
             $response = [
                 'result' => [
                     'transaction' => "{$transaction->id}",

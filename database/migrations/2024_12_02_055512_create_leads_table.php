@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('seen')->default(false);
             $table->text('ip');
             $table->text('user_agent');
+            $table->unsignedBigInteger('user_lead_id')->index();
             $table->text('name')->nullable();
             $table->text('email')->nullable();
             $table->text('phone')->nullable();

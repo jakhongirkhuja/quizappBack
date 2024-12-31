@@ -10,8 +10,10 @@ use App\Models\Project;
 use App\Models\StartPage;
 use App\Models\Tarif;
 use App\Models\User;
+use App\Models\UserLead;
 use Illuminate\Support\Str;
 use App\Services\ProjectService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
@@ -50,7 +52,13 @@ class AuthController extends Controller
         $data['user_id']= $user->id;
         $data['uuid'] = Str::uuid();
         Project::create($data);
-        
+        $userLeads = new UserLead();
+        $userLeads->user_id = $user->id;
+        $userLeads->leads_added = 5;
+        $userLeads->valid_from = Carbon::now();
+        $userLeads->valid_until =  Carbon::now()->addWeek();
+        $userLeads->test  =true;
+        $userLeads->save();
         return response()->json([
             'message' => 'User registered successfully',
             'user' => $user,

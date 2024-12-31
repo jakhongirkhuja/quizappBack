@@ -14,10 +14,13 @@ class Order extends Model
         $tarif = Tarif::find($data['tarif_id']);
         $price=  $tarif->price;
         $newPrice = $price;
+        $leads =$tarif->leads;
+        $newLeads =  $leads;
         if($data['halfyear']==1){
             $newPrice = (int) (($price * 6)*0.85);
+            $newLeads = $leads * 6;
         }
-        $this->leads =  $tarif->leads;
+        $this->leads =  $newLeads;
         $this->price = $newPrice;
         $this->save();
     }
